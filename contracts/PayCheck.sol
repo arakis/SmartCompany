@@ -71,4 +71,5 @@ contract PayCheck {
         payedMinutes += numMinutes;
         contractStart = block.timestamp; // TODO: Ggf. andere Lösung überlegen. Denn so kann der nicht 2-3 Transaktionen hintereinander eingeben um z.b. künftig einen purpose anzugeben.
     }
+
 }
