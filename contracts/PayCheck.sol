@@ -21,15 +21,17 @@ contract PayCheck {
     //     greeting = _greeting;
     // }
 
-    constructor(address _tokenAddress, address _bossAddress, address _workerAddress) {
+    constructor(
+        address _tokenAddress,
+        address _bossAddress,
+        address _workerAddress
+    ) {
         token = IERC20(_tokenAddress);
         bossAddress = _bossAddress;
         workerAddress = _workerAddress;
     }
 
     IERC20 private token;
-    //address private token;
-    uint256 private balance;
     address private bossAddress;
     address private workerAddress;
     uint256 private paymentPerMinute;
@@ -38,13 +40,15 @@ contract PayCheck {
         token.transferFrom(bossAddress, address(this), amount);
     }
 
-    function viewBalance() public view returns (uint256) {
+    function getBudget() public view returns (uint256) {
         return token.balanceOf(address(this));
     }
 
     function uploadHours(uint256 numMinutes) public {
-        uint256 amount = paymentPerMinute * numMinutes;
-        
-    }
+        require(numMinutes < 60 * 24, "Too many minutes");
 
+        uint256 amount = paymentPerMinute * numMinutes;
+
+        token.transfer(workerAddress, amount);
+    }
 }
