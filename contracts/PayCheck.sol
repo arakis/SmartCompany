@@ -49,6 +49,11 @@ contract PayCheck {
         token.transferFrom(bossAddress, address(this), amount);
     }
 
+    function withdrawCash(uint256 amount) public {
+        require(msg.sender == bossAddress, "Permission denied");
+        token.transfer(bossAddress, amount);
+    }
+
     function getBudget() public view returns (uint256) {
         return token.balanceOf(address(this));
     }
@@ -64,5 +69,6 @@ contract PayCheck {
 
         token.transfer(workerAddress, amount);
         payedMinutes += numMinutes;
+        contractStart = block.timestamp; // TODO: Ggf. andere Lösung überlegen. Denn so kann der nicht 2-3 Transaktionen hintereinander eingeben um z.b. künftig einen purpose anzugeben.
     }
 }
