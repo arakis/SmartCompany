@@ -21,20 +21,30 @@ contract PayCheck {
     //     greeting = _greeting;
     // }
 
-    constructor(address _tokenAddress) {
+    constructor(address _tokenAddress, address _bossAddress, address _workerAddress) {
         token = IERC20(_tokenAddress);
+        bossAddress = _bossAddress;
+        workerAddress = _workerAddress;
     }
 
     IERC20 private token;
     //address private token;
-    int private balance;
+    uint256 private balance;
+    address private bossAddress;
+    address private workerAddress;
+    uint256 private paymentPerMinute;
 
-    function depositCash(int amount) public {
-        balance += amount;
+    function depositCash(uint256 amount) public {
+        token.transferFrom(bossAddress, address(this), amount);
     }
 
-    function uploadHours(int numHours) public {
+    function viewBalance() public view returns (uint256) {
+        return token.balanceOf(address(this));
+    }
 
+    function uploadHours(uint256 numMinutes) public {
+        uint256 amount = paymentPerMinute * numMinutes;
+        
     }
 
 }
