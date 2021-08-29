@@ -24,17 +24,27 @@ contract PayCheck {
     constructor(
         address _tokenAddress,
         address _bossAddress,
-        address _workerAddress
+        address _workerAddress,
     ) {
         token = IERC20(_tokenAddress);
         bossAddress = _bossAddress;
         workerAddress = _workerAddress;
+        contractStart = block.timestamp;
     }
 
+     
+    uint private contractStart;
     IERC20 private token;
     address private bossAddress;
     address private workerAddress;
     uint256 private paymentPerMinute;
+
+
+    function setContractStart(uint timestamp) public {
+        require(msg.sender == bossAddress, "Permission denied");
+
+        contractStart = timestamp;
+    }
 
     function depositCash(uint256 amount) public {
         token.transferFrom(bossAddress, address(this), amount);
@@ -45,10 +55,12 @@ contract PayCheck {
     }
 
     function uploadHours(uint256 numMinutes) public {
+        require(msg.sender == workerAddress, "Permission denied");
         require(numMinutes < 60 * 24, "Too many minutes");
 
         uint256 amount = paymentPerMinute * numMinutes;
 
         token.transfer(workerAddress, amount);
     }
+    
 }
